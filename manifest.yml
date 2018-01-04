@@ -3,3 +3,8 @@ applications:
 - memory: 512M
   instances: 1
   timeout: 60
+  env:
+    - clientId: 6252741026.284822555367
+    - clientSecret: fb64059dff76a1213b51062c0db9d571
+    - studio_token: nYPmlv3ekd8eFkVT6vGLsz2blNqqmyWWLlauOlBVzMKvp1oVTJY7ALWiik8ElFMC
+    - PORT: 3000
