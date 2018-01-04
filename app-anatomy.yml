@@ -11,6 +11,7 @@ environment-groups:
 - name: live
   automatic-approval: true
   cf-diego-enabled: True
+  needs-to-be-publicly-accessible: true
 go-pipeline-group: DRGData
 language: node.js
 
