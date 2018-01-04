@@ -1,0 +1,18 @@
+component-id: slackbot
+cf-username: DRG-Data@springer.com
+version: "2"
+dashboards:
+  grafana:
+  - ''
+environment-groups:
+- name: dev
+  automatic-approval: true
+  cf-diego-enabled: True
+- name: live
+  automatic-approval: true
+  cf-diego-enabled: True
+go-pipeline-group: DRGData
+language: node.js
+
+timer: 0 15 10 ? * MON
+require-hook-files: true
