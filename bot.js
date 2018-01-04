@@ -89,6 +89,24 @@ controller.startTicking();
 // Set up an Express-powered webserver to expose oauth and webhook endpoints
 var webserver = require(__dirname + '/components/express_webserver.js')(controller);
 
+var oneSecond = 1000;
+var oneMinute = 60 * oneSecond;
+var oneHour = 60 * oneMinute;
+var oneDay = 24 * oneHour;
+
+webserver.get('/internal/status', function(req, res) {
+  res.json({ "alerting": { "emails": ["DRG-Data@springer.com"],
+                           "hipchat-rooms": ["ITPDRG"] }});
+});
+
+webserver.get('/internal/config', function(req, res) {
+  res.json({"name": "example"});
+});
+
+webserver.get('/internal/version', function(req, res) {
+  res.json({"revision": process.env.GIT_REVISION});
+});
+
 if (!process.env.clientId || !process.env.clientSecret) {
 
   // Load in some helpers that make running Botkit on Glitch.com better
@@ -179,3 +197,4 @@ function usage_tip() {
     console.log('Get a Botkit Studio token here: https://studio.botkit.ai/')
     console.log('~~~~~~~~~~');
 }
+
