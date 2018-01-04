@@ -1,9 +1,5 @@
-component-id: slackbot
 cf-username: DRG-Data@springer.com
-version: "2"
-dashboards:
-  grafana:
-  - ''
+ci-server-host: te-prod-go-03.springer-sbm.com
 environment-groups:
 - name: dev
   automatic-approval: true
