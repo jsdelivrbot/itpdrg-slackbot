@@ -1,5 +1,5 @@
 cf-username: DRG-Data@springer.com
-ci-server-host: te-prod-go-03.springer-sbm.com
+ci-server-host: drg.gocd.tools.engineering
 environment-groups:
 - name: dev
   automatic-approval: true
