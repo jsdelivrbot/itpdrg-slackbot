@@ -35,6 +35,7 @@ module.exports = function(controller) {
         // can call convo.gotoThread() to change direction of conversation
 
         console.log('VALIDATE: knowledge_model_lookup VARIABLE: uri');
+	console.log(`uri=${uri}`);
 
         // always call next!
         next();
