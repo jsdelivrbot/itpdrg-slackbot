@@ -162,7 +162,7 @@ kmLookup = function(uri) {
 		var encodedUri = encodeURI(uri.substring(1, uri.length-1)); // strip the < > and encode
 		var requestUrl = `http://models-staging.dev.cf.private.springer.com/km/concept?uri=${encodedUri}`;
 		console.log(`requestUrl=${requestUrl}`);
-		request($requestUrl, function (err, response, body) {
+		request(requestUrl, function (err, response, body) {
 
 			console.log('error: ', err); // Handle the error if one occurred
 			console.log('statusCode: ', response && response.statusCode); // Check 200 or such
