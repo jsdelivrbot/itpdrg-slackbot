@@ -169,6 +169,8 @@ kmLookup = function(requestUrl) {
 			if (err) {
 				console.log('error: ', err); // Handle the error if one occurred
 				reject(err);
+			} else if (response && response.statusCode == 404) {
+				reject("Not found");
 			} else {
 				console.log('This is the body: ', body);
 				resolve(JSON.parse(body));
