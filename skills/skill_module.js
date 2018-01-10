@@ -110,7 +110,8 @@ module.exports = function(controller) {
 	  var uri = convo.extractResponse('uri');
 	  kmLookup(uri).then(function(results) {
 
-	    convo.setVar('results', results);
+	    convo.setVar('prefLabel', results.prefLabel);
+	    convo.setVar('altLabels', results.altLabels);
 	    next();
 
 	  }).catch(function(err) {
@@ -164,11 +165,14 @@ kmLookup = function(uri) {
 		console.log(`requestUrl=${requestUrl}`);
 		request(requestUrl, function (err, response, body) {
 
-			console.log('error: ', err); // Handle the error if one occurred
 			console.log('statusCode: ', response && response.statusCode); // Check 200 or such
-			console.log('This is the body: ', body);
-
-			resolve(body);
+			if (err) {
+				console.log('error: ', err); // Handle the error if one occurred
+				reject(err);
+			} else {
+				console.log('This is the body: ', body);
+				resolve(body);
+			}
 		});
 	});
 };
