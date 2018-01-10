@@ -158,6 +158,7 @@ module.exports = function(controller) {
 kmLookup = function(uri) {
 	return new Promise(function(resolve, reject) {
 		console.log(`kmLookup(${uri})`);
+		resolve('UV-Vis reflectance spectroscopy');
 	});
 };
 
