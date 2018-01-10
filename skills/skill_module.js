@@ -104,6 +104,24 @@ module.exports = function(controller) {
         next();
     });
 
+    controller.studio.beforeThread('knowledge_model_lookup', 'results', function(convo, next) {
+
+	  var uri = convo.extractResponse('uri');
+	  kmLookup(uri).then(function(results) {
+
+	    convo.setVar('results', results);
+	    next();
+
+	  }).catch(function(err) {
+
+	    convo.setVar('error', err);
+	    convo.gotoThread('error');
+	    next(err);
+
+      });
+
+    });
+
     // Before the on_timeout thread starts, run this:
     controller.studio.beforeThread('knowledge_model_lookup','on_timeout', function(convo, next) {
 
@@ -115,7 +133,6 @@ module.exports = function(controller) {
         // always call next!
         next();
     });
-
 
     // define an after hook
     // you may define multiple after hooks. they will run in the order they are defined.
@@ -129,10 +146,18 @@ module.exports = function(controller) {
 
             var responses = convo.extractResponses();
             // do something with the responses
+            console.log(`responses=${responses}`);
 
         }
 
         // don't forget to call next, or your conversation will never properly complete.
         next();
     });
-}
+};
+
+kmLookup = function(uri) {
+	return new Promise(function(resolve, reject) {
+		console.log(`kmLookup(${uri})`);
+	});
+};
+
