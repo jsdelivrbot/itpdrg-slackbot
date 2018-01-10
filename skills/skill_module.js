@@ -108,7 +108,10 @@ module.exports = function(controller) {
     controller.studio.beforeThread('knowledge_model_lookup', 'results', function(convo, next) {
 
 	  var uri = convo.extractResponse('uri');
-	  kmLookup(uri).then(function(results) {
+	  var encodedUri = encodeURI(uri.substring(1, uri.length-1)); // strip the < > and encode
+	  var requestUrl = `http://models-staging.dev.cf.private.springer.com/km/concept?uri=${encodedUri}`;
+	  convo.setVar('requestUrl', requestUrl);
+	  kmLookup(requestUrl).then(function(results) {
 
 	    convo.setVar('prefLabel', results.prefLabel);
 	    convo.setVar('altLabels', results.altLabels);
@@ -157,11 +160,8 @@ module.exports = function(controller) {
     });
 };
 
-kmLookup = function(uri) {
+kmLookup = function(requestUrl) {
 	return new Promise(function(resolve, reject) {
-		console.log(`kmLookup(${uri})`);
-		var encodedUri = encodeURI(uri.substring(1, uri.length-1)); // strip the < > and encode
-		var requestUrl = `http://models-staging.dev.cf.private.springer.com/km/concept?uri=${encodedUri}`;
 		console.log(`requestUrl=${requestUrl}`);
 		request(requestUrl, function (err, response, body) {
 
