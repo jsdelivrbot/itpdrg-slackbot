@@ -160,13 +160,15 @@ kmLookup = function(uri) {
 	return new Promise(function(resolve, reject) {
 		console.log(`kmLookup(${uri})`);
 		var encodedUri = encodeURI(uri.substring(1, uri.length-1)); // strip the < > and encode
-		request(`http://models-staging.dev.cf.private.springer.com/km/concept?uri=${encodedUri}`, function (err, response, body) {
+		var requestUrl = `http://models-staging.dev.cf.private.springer.com/km/concept?uri=${encodedUri}`;
+		console.log(`requestUrl=${requestUrl}`);
+		request($requestUrl, function (err, response, body) {
 
 			console.log('error: ', err); // Handle the error if one occurred
 			console.log('statusCode: ', response && response.statusCode); // Check 200 or such
-			console.log('This is the prefLabel: ', body.prefLabel);
+			console.log('This is the body: ', body);
 
-			resolve(body.prefLabel);
+			resolve(body);
 		});
 	});
 };
