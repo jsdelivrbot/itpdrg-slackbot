@@ -171,7 +171,7 @@ kmLookup = function(uri) {
 				reject(err);
 			} else {
 				console.log('This is the body: ', body);
-				resolve(body);
+				resolve(JSON.parse(body));
 			}
 		});
 	});
