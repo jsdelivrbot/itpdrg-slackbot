@@ -168,7 +168,6 @@ kmLookup = function(uri) {
 
 			resolve(body.prefLabel);
 		});
-                resolve('dummy result');
 	});
 };
 
