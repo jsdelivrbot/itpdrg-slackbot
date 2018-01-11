@@ -11,5 +11,4 @@ environment-groups:
 go-pipeline-group: DRGData
 language: node.js
 
-timer: 0 15 10 ? * MON
 require-hook-files: true
