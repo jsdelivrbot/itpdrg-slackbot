@@ -21,7 +21,7 @@ module.exports = function(controller) {
         // test or validate value somehow
         // can call convo.gotoThread() to change direction of conversation
 
-        console.log('VALIDATE: pos VARIABLE: pos_input=${text}`);
+        console.log(`VALIDATE: pos VARIABLE: pos_input=${text}`);
 
 	var words = new pos.Lexer().lex(text);
 	var tagger = new pos.Tagger();
