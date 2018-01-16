@@ -4,7 +4,7 @@ Botkit Studio Skill module to enhance the "pos" script
 
 */
 
-var request = require('pos');
+var pos = require('pos');
 
 module.exports = function(controller) {
 
