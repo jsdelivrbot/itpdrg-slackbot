@@ -26,13 +26,32 @@ module.exports = function(controller) {
 	var words = new pos.Lexer().lex(text);
 	var tagger = new pos.Tagger();
 	var taggedWords = tagger.tag(words);
+	var fields = [];
 	for (i in taggedWords) {
 	    var taggedWord = taggedWords[i];
 	    var word = taggedWord[0];
 	    var tag = taggedWord[1];
 	    console.log(word + " /" + tag);
+            fields.push({ word : tag });
 	}
 	convo.setVar('pos_output', taggedWords);
+
+	var reply_with_attachments = {
+	    'username': 'itpdrg-bot' ,
+	    'text': 'This is what I understood:',
+	    'attachments': [
+	      {
+		'fallback': 'POS analysis',
+		'title': 'POS analysis',
+		'text': text,
+		'color': '#7CD197',
+                'fields': fields
+	      }
+	    ],
+	    'icon_url': 'http://lorempixel.com/48/48'
+	};
+
+	convo.say(reply_with_attachments);
 
         // always call next!
         next();
