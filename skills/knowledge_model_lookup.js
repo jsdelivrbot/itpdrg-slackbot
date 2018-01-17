@@ -79,7 +79,7 @@ objectAttachment = function(object) {
 	var fields = [];
 
 	for (i in object) {
-		var field = { title: i, value: object[i] };
+		var field = { title: i, value: JSON.stringify(object[i]) };
 		console.log('field = ', JSON.stringify(field));
 		fields.push(field);
 	}
