@@ -23,23 +23,30 @@ module.exports = function(controller) {
 	  	var requestUrl = `http://models-staging.dev.cf.private.springer.com/km/concept?uri=${encodedUri}`;
 	  	convo.setVar('requestUrl', requestUrl);
 	  	kmLookup(requestUrl).then(function(results) {
-
 	    		convo.setVar('uri', uri);
 	    		convo.setVar('prefLabel', results.prefLabel);
 	    		convo.setVar('altLabels', results.altLabels);
 	    		next();
-
 	  	}).catch(function(err) {
-
 	    		convo.setVar('error', err);
 	    		convo.gotoThread('error');
 	    		next(err);
-
       		});
           } else { // treat it as a label
 		var branchUri = 'http://km.springer.com/nano-terms/e858247acd17d6a34bd62c59c6d527a7';
 		var encodedBranchUri = encodeURI(branchUri);
 	  	var requestUrl = `http://models-staging.dev.cf.private.springer.com/km?branch=${encodedBranchUri}&label=${uri}`;
+	  	convo.setVar('requestUrl', requestUrl);
+	  	kmLookup(requestUrl).then(function(results) {
+	    		convo.setVar('uri', results.uri);
+	    		convo.setVar('prefLabel', results.prefLabel);
+	    		convo.setVar('altLabels', results.altLabels);
+	    		next();
+	  	}).catch(function(err) {
+	    		convo.setVar('error', err);
+	    		convo.gotoThread('error');
+	    		next(err);
+      		});
 	  }
 
     });
