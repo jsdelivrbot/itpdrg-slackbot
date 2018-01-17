@@ -39,7 +39,7 @@ module.exports = function(controller) {
 			var attachments = [];
 			for (var i = 0; i < results.length; i++) {
 				var r = results[i];
-				console.log(`${i}: ${r}`);
+				console.log(i,': ',JSON.stringify(r));
 				attachments.push(objectAttachment(r));
 			}
 			convo.say({ text: 'This is what I found out:', attachments: attachments });
@@ -79,7 +79,9 @@ objectAttachment = function(object) {
 	var fields = [];
 
 	for (i in object) {
-		fields.push({ title: i, value: object[i] });
+		var field = { title: i, value: object[i] };
+		console.log('field = ', JSON.stringify(field));
+		fields.push(field);
 	}
 
 	return {
