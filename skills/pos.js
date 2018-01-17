@@ -32,9 +32,7 @@ module.exports = function(controller) {
 	    var word = taggedWord[0];
 	    var tag = taggedWord[1];
 	    console.log(word + " /" + tag);
-	    var field = {};
-	    field[word] = tag;
-            fields.push(field);
+            fields.push({title: word, value: tag});
 	}
 	console.log(fields);
 	convo.setVar('pos_output', taggedWords);
