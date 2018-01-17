@@ -83,6 +83,6 @@ objectAttachment = function(object) {
 	}
 
 	return {
-                'fields': fields
+                fields: fields
 	};
 }
