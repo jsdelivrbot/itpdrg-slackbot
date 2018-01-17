@@ -23,9 +23,7 @@ module.exports = function(controller) {
 	  	var requestUrl = `http://models-staging.dev.cf.private.springer.com/km/concept?uri=${encodedUri}`;
 	  	convo.setVar('requestUrl', requestUrl);
 	  	kmLookup(requestUrl).then(function(results) {
-	    		convo.setVar('uri', value);
-	    		convo.setVar('prefLabel', results.prefLabel);
-	    		convo.setVar('altLabels', results.altLabels);
+			convo.say(objectMessage('This is what I found out:', results));
 	    		next();
 	  	}).catch(function(err) {
 	    		convo.setVar('error', err);
@@ -38,9 +36,11 @@ module.exports = function(controller) {
 	  	var requestUrl = `http://models-staging.dev.cf.private.springer.com/km/?branch=${encodedBranchUri}&label=${value}`;
 	  	convo.setVar('requestUrl', requestUrl);
 	  	kmLookup(requestUrl).then(function(results) {
-	    		convo.setVar('uri', results.uri);
-	    		convo.setVar('prefLabel', results.prefLabel);
-	    		convo.setVar('altLabels', results.altLabels);
+			var text = 'This is what I found out:';
+			for (r in results) {
+				convo.say(objectMessage(text, r));
+				text = 'and';
+			}
 	    		next();
 	  	}).catch(function(err) {
 	    		convo.setVar('error', err);
@@ -51,25 +51,6 @@ module.exports = function(controller) {
 
     });
 
-    // define an after hook
-    // you may define multiple after hooks. they will run in the order they are defined.
-    // See: https://github.com/howdyai/botkit/blob/master/docs/readme-studio.md#controllerstudioafter
-    controller.studio.after('knowledge_model_lookup', function(convo, next) {
-
-        console.log('AFTER: knowledge_model_lookup');
-
-        // handle the outcome of the convo
-        if (convo.successful()) {
-
-            var responses = convo.extractResponses();
-            // do something with the responses
-            console.log(`responses=${responses}`);
-
-        }
-
-        // don't forget to call next, or your conversation will never properly complete.
-        next();
-    });
 };
 
 kmLookup = function(requestUrl) {
@@ -91,6 +72,21 @@ kmLookup = function(requestUrl) {
 	});
 };
 
-objectMessage = function(object) {
-	return {};
+objectMessage = function(text, object) {
+
+	var fields = [];
+
+	for (i in object) {
+		fields.push({ title: i, value: object[i] });
+	}
+
+	return {
+	    'text': text,
+	    'attachments': [
+	      {
+		'fallback': text,
+                'fields': fields
+	      }
+	    ],
+	};
 }
