@@ -32,13 +32,14 @@ module.exports = function(controller) {
 	    var word = taggedWord[0];
 	    var tag = taggedWord[1];
 	    console.log(word + " /" + tag);
-            fields.push({ word : tag });
+	    var field = {};
+	    field[word] = tag;
+            fields.push(field);
 	}
 	console.log(fields);
 	convo.setVar('pos_output', taggedWords);
 
 	var reply_with_attachments = {
-	    'username': 'itpdrg-bot' ,
 	    'text': 'This is what I understood:',
 	    'attachments': [
 	      {
@@ -49,10 +50,9 @@ module.exports = function(controller) {
                 'fields': fields
 	      }
 	    ],
-	    'icon_url': 'http://lorempixel.com/48/48'
 	};
 
-	convo.say(reply_with_attachments);
+	convo.sayFirst(reply_with_attachments);
 
         // always call next!
         next();
