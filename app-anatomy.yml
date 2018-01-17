@@ -1,9 +1,6 @@
 cf-username: DRG-Data@springer.com
 ci-server-host: drg.gocd.tools.engineering
 environment-groups:
-- name: dev
-  automatic-approval: true
-  cf-diego-enabled: True
 - name: live
   automatic-approval: true
   cf-diego-enabled: True
