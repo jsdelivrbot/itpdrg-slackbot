@@ -37,7 +37,8 @@ module.exports = function(controller) {
 	  	convo.setVar('requestUrl', requestUrl);
 	  	kmLookup(requestUrl).then(function(results) {
 			var text = 'This is what I found out:';
-			for (r in results) {
+			for (var i = 0; i < results.length; i++) {
+				var r = results[i];
 				convo.say(objectMessage(text, r));
 				text = 'and';
 			}
