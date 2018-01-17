@@ -34,6 +34,7 @@ module.exports = function(controller) {
 	    console.log(word + " /" + tag);
             fields.push({ word : tag });
 	}
+	console.log(fields);
 	convo.setVar('pos_output', taggedWords);
 
 	var reply_with_attachments = {
