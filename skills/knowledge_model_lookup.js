@@ -36,12 +36,13 @@ module.exports = function(controller) {
 	  	var requestUrl = `http://models-staging.dev.cf.private.springer.com/km/?branch=${encodedBranchUri}&label=${value}`;
 	  	convo.setVar('requestUrl', requestUrl);
 	  	kmLookup(requestUrl).then(function(results) {
-			var text = 'This is what I found out:';
+			var attachments = [];
 			for (var i = 0; i < results.length; i++) {
 				var r = results[i];
-				convo.say(objectMessage(text, r));
-				text = 'and';
+				console.log(`${i}: ${r}`);
+				attachments.push(objectAttachment(r));
 			}
+			convo.say({ text: 'This is what I found out:', attachments: attachments });
 	    		next();
 	  	}).catch(function(err) {
 	    		convo.setVar('error', err);
@@ -73,7 +74,7 @@ kmLookup = function(requestUrl) {
 	});
 };
 
-objectMessage = function(text, object) {
+objectAttachment = function(object) {
 
 	var fields = [];
 
@@ -82,12 +83,6 @@ objectMessage = function(text, object) {
 	}
 
 	return {
-	    'text': text,
-	    'attachments': [
-	      {
-		'fallback': text,
                 'fields': fields
-	      }
-	    ],
 	};
 }
