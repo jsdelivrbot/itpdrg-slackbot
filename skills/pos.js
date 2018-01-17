@@ -42,7 +42,7 @@ module.exports = function(controller) {
 	    'attachments': [
 	      {
 		'fallback': 'POS analysis',
-		'title': 'POS analysis',
+		'title': 'original text',
 		'text': text,
 		'color': '#7CD197',
                 'fields': fields
