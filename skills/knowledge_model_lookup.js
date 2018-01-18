@@ -46,7 +46,10 @@ module.exports = function(controller) {
                                   convo.say(a.fields[i].title + " : " + a.fields[i].value);
                                 }
 			}
-			#convo.say({ text: 'This is what I found out:', attachments: attachments });
+			convo.ask('Are you happy?', function (response, convo) {
+			 	convo.say('you answered '+response.text);
+			}
+			//convo.say({ text: 'This is what I found out:', attachments: attachments });
 	    		next();
 	  	}).catch(function(err) {
 	    		convo.setVar('error', err);
