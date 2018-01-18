@@ -41,6 +41,7 @@ module.exports = function(controller) {
 				var r = results[i];
 				console.log(i,': ',JSON.stringify(r));
 				var a = objectAttachment(r);
+				console.log("a = "+a);
 				attachments.push(a);
                                 for (var j = 0; j < a.fields; j++) {
                                   console.log('field#'+j+': '+a.fields[j].title + " : " + a.fields[j].value);
