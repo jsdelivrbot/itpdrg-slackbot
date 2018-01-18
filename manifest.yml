@@ -1,5 +1,5 @@
 ---
 applications:
-- memory: 1G
+- memory: 256M
   instances: 1
   timeout: 60
