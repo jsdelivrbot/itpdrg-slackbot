@@ -43,7 +43,9 @@ module.exports = function(controller) {
 				var a = objectAttachment(r);
 				attachments.push(a);
                                 for (var j = 0; j < a.fields; j++) {
-                                  convo.say(a.fields[i].title + " : " + a.fields[i].value);
+                                  console.log('field#'+j+': '+a.fields[j].title + " : " + a.fields[j].value);
+                                  convo.say(a.fields[j].title + " : " + a.fields[j].value);
+				  console.log('after say');
                                 }
 			}
 			convo.ask('Are you happy?', function (response, convo) {
