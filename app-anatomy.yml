@@ -7,5 +7,6 @@ environment-groups:
   needs-to-be-publicly-accessible: true
 go-pipeline-group: DRGData
 language: node.js
+slack-channel: itpdrg-builds
 
 require-hook-files: true
