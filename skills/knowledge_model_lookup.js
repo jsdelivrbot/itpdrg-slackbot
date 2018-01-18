@@ -33,7 +33,7 @@ module.exports = function(controller) {
           } else { // treat it as a label
 		var branchUri = 'http://km.springer.com/nano-terms/e858247acd17d6a34bd62c59c6d527a7';
 		var encodedBranchUri = encodeURI(branchUri);
-	  	var requestUrl = `http://models-staging.dev.cf.private.springer.com/km/?branch=${encodedBranchUri}&label=${value}`;
+	  	var requestUrl = `http://models-staging.dev.cf.private.springer.com/km/?branch=${encodedBranchUri}&label=${value}&matchingStrategy=substringIgnoreCase`;
 	  	convo.setVar('requestUrl', requestUrl);
 	  	kmLookup(requestUrl).then(function(results) {
 			var attachments = [];
@@ -41,8 +41,11 @@ module.exports = function(controller) {
 				var r = results[i];
 				console.log(i,': ',JSON.stringify(r));
 				attachments.push(objectAttachment(r));
+                                for (var j = 0; j < r.fields; j++) {
+                                  convo.say(r.fields[i].title + " : " + r.fields[i].value);
+                                }
 			}
-			convo.say({ text: 'This is what I found out:', attachments: attachments });
+			#convo.say({ text: 'This is what I found out:', attachments: attachments });
 	    		next();
 	  	}).catch(function(err) {
 	    		convo.setVar('error', err);
