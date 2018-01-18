@@ -99,6 +99,8 @@ objectAttachment = function(object) {
 	var attachment = {};
 
 	attachment["fields"] = fields;
+
+	console.log('attachment = '+attachment);
 	
 	return attachment;
 }
