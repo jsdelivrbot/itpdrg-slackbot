@@ -40,9 +40,10 @@ module.exports = function(controller) {
 			for (var i = 0; i < results.length; i++) {
 				var r = results[i];
 				console.log(i,': ',JSON.stringify(r));
-				attachments.push(objectAttachment(r));
-                                for (var j = 0; j < r.fields; j++) {
-                                  convo.say(r.fields[i].title + " : " + r.fields[i].value);
+				var a = objectAttachment(r);
+				attachments.push(a);
+                                for (var j = 0; j < a.fields; j++) {
+                                  convo.say(a.fields[i].title + " : " + a.fields[i].value);
                                 }
 			}
 			#convo.say({ text: 'This is what I found out:', attachments: attachments });
