@@ -48,7 +48,7 @@ module.exports = function(controller) {
 			}
 			convo.ask('Are you happy?', function (response, convo) {
 			 	convo.say('you answered '+response.text);
-			}
+			});
 			//convo.say({ text: 'This is what I found out:', attachments: attachments });
 	    		next();
 	  	}).catch(function(err) {
