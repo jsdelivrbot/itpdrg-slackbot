@@ -93,7 +93,11 @@ objectAttachment = function(object) {
 		fields.push(field);
 	}
 
-	return {
-                fields: fields
-	};
+	console.log('fields = '+fields);
+
+	var attachment = {};
+
+	attachment["fields"] = fields;
+	
+	return attachment;
 }
