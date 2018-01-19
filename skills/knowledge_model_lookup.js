@@ -43,6 +43,7 @@ module.exports = function(controller) {
 				var a = objectAttachment(r);
 				console.log("a = "+a);
 				attachments.push(a);
+				console.log("after push");
                                 for (var j = 0; j < a.fields.length; j++) {
                                   console.log('field#'+j+': '+a.fields[j].title + " : " + a.fields[j].value);
                                   convo.say(a.fields[j].title + " : " + a.fields[j].value);
