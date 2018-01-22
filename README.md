@@ -4,3 +4,7 @@ This repo contains the botkit-based chatbot that makes diverse ITPDRG services a
 
 Imported from https://glitch.com/edit/#!/dour-hockey.
 
+Important links for reference:
+ - https://api.slack.com/apps/A8CQ6GBAT/general? to configure the bot's Slack app
+ 
+ 
