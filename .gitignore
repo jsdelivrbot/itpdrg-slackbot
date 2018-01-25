@@ -4,3 +4,5 @@ components/routes/_*
 .sass-cache/*
 package-lock.json
 .data/
+.idea/
+*.iml
