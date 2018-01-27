@@ -27,10 +27,29 @@ module.exports = function (controller) {
 			var value = parts.join(' ');
 			console.log(`uri=${value}`);
 			convo.setVar('searchTerm', value);
-			convo.gotoThread('results');
-			next('stop');
-		} else {
+		}
+
+		topLevelConcepts().then(function(top_level_concepts) {
+			convo.setVar('top_level_concepts', top_level_concepts);
+			convo.setVar('top_level_cursor', null);
+			convo.setVar('top_level_uri', null);
 			next();
+		});
+
+	});
+
+	controller.studio.beforeThread('knowledge_model_lookup', 'bridge', function (convo, next) {
+
+		var selected_top_level = convo.extractResponse('selected_top_level');
+		var selected_branch = selected_top_level - 1;
+		if (selected_branch >= 0
+			&& selected_branch < convo.vars.top_level_concepts.numberOfConcepts
+		) {
+			convo.setVar('selected_branch', selected_branch);
+			next();
+		} else {
+			convo.gotoThread('top_level_concepts');
+			next('stop');
 		}
 	});
 
@@ -43,11 +62,14 @@ module.exports = function (controller) {
 		var value = convo.vars.searchTerm;
 		console.log(`uri=${value}`);
 
-		search(value).then(function (results) {
+		var branchUri = convo.vars.top_level_concepts.concepts[convo.vars.selected_branch].uri;
+
+		search(branchUri,value).then(function (results) {
 			convo.setVar('results', results);
 			if (results.numberOfConcepts > 1) {
 				convo.setVar('selectedConcept', null);
 				convo.setVar('conceptCursor', null);
+				convo.setVar('remainingConcepts', results.numberOfConcepts);
 				convo.gotoThread('concepts');
 			} else {
 				convo.setVar('selectedConcept', 0);
@@ -85,46 +107,61 @@ module.exports = function (controller) {
 				next('stop');
 			} else {
 				convo.setVar('current', convo.vars.results.concepts[convo.vars.conceptCursor]);
+				convo.setVar('remainingConcepts', convo.vars.results.numberOfConcepts - convo.vars.conceptCursor);
 				next();
 			}
 		}
 	});
-
-	controller.on('interactive_message_callback', function(bot, message) {
-		if (message.callback_id == 123) {
-			console.log('callback from button received');
-		}
-	});
 };
 
-search = function (value) {
+search = function (branchUri, value) {
 	var requestUrl;
 	if (value.startsWith('http:')) { // looks like a URI
 		var encodedUri = encodeURI(value.substring(1, value.length - 1)); // strip the < > and encode
 		requestUrl = `http://models-staging.dev.cf.private.springer.com/km/concept?maxNarrowingDepth=0&uri=${encodedUri}`;
 		return kmLookup(requestUrl).then(function (concept) {
-			return {
-				numberOfConcepts: 1,
-				concepts: [concept]
-			}; // wrap single concept in an array
+			return postProcessConcepts([concept]); // wrap single concept in an array
 		});
 	} else { // treat it as a label
-		var branchUri = 'http://km.springer.com/nano-terms/e858247acd17d6a34bd62c59c6d527a7';
 		var encodedBranchUri = encodeURI(branchUri);
 		requestUrl = `http://models-staging.dev.cf.private.springer.com/km/?maxNarrowingDepth=0&branch=${encodedBranchUri}&label=${value}&matchingStrategy=substringIgnoreCase`;
+		return kmLookup(requestUrl).then(function (concepts) {
+			return postProcessConcepts(concepts);
+		});
+	}
+}
+
+withIds = function (list, propertyName, firstIndex) {
+	firstIndex |= 0;
+	return list.map((item, idx) => {
+		var augmented = Object.create(item);
+		augmented[propertyName] = idx + firstIndex;
+		return augmented;
+	});
+}
+
+postProcessConcepts = function(concepts) {
+	return {
+		numberOfConcepts: concepts.length,
+		concepts: withIds(concepts, 'index', 1)
+	};
+}
+
+topLevelConcepts = function() {
+	requestUrl = `http://models-staging.dev.cf.private.springer.com/km/?maxNarrowingDepth=0`;
 		return kmLookup(requestUrl).then(function (concepts) {
 			return {
 				numberOfConcepts: concepts.length,
 				concepts: concepts
 			};
 		});
-	}
+
 }
 
 kmLookup = function (requestUrl) {
 	return new Promise(function (resolve, reject) {
 		console.log(`requestUrl=${requestUrl}`);
-		request(requestUrl, function (err, response, body) {
+		request(requestUrl, {timeout: 30000}, function (err, response, body) {
 
 			console.log('statusCode: ', response && response.statusCode); // Check 200 or such
 			if (err) {
