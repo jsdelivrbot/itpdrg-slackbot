@@ -38,7 +38,24 @@ module.exports = function (controller) {
 
 	});
 
-	controller.studio.beforeThread('knowledge_model_lookup', 'bridge', function (convo, next) {
+	controller.studio.beforeThread('knowledge_model_lookup', 'top_level_concepts', function (convo, next) {
+
+		if (convo.vars.top_level_cursor == null) {
+			convo.setVar('top_level_cursor', 0);
+			convo.setVar('current_top_level', convo.vars.top_level_concepts.concepts[0]);
+			next();
+		} else if (convo.vars.top_level_cursor < convo.vars.top_level_concepts.numberOfConcepts) {
+			convo.setVar('top_level_cursor', convo.vars.top_level_cursor + 1);
+			convo.setVar('current_top_level', convo.vars.top_level_concepts.concepts[convo.vars.top_level_cursor]);
+			next();
+		} else {
+			convo.gotoThread('choice');
+			next('stop');
+		}
+
+	});
+
+	controller.studio.beforeThread('knowledge_model_lookup', 'xxx', function (convo, next) {
 
 		var selected_top_level = convo.extractResponse('selected_top_level');
 		var selected_branch = selected_top_level - 1;
@@ -56,13 +73,17 @@ module.exports = function (controller) {
 	controller.studio.beforeThread('knowledge_model_lookup', 'results', function (convo, next) {
 
 		var uri = convo.extractResponse('uri');
-		if (uri) {
+		if (uri != null) {
 			convo.setVar('searchTerm', uri);
 		}
 		var value = convo.vars.searchTerm;
-		console.log(`uri=${value}`);
+		console.log(`searching for ${value}`);
 
-		var branchUri = convo.vars.top_level_concepts.concepts[convo.vars.selected_branch].uri;
+		var branchUri = null;
+		
+		if (convo.vars.top_level_concepts && convo.vars.selected_branch) {
+			branchUri = convo.vars.top_level_concepts.concepts[convo.vars.selected_branch].uri;
+		}
 
 		search(branchUri,value).then(function (results) {
 			convo.setVar('results', results);
@@ -81,6 +102,11 @@ module.exports = function (controller) {
 			convo.gotoThread('error');
 			next(err);
 		});
+	});
+
+	controller.studio.beforeThread('knowledge_model_lookup', 'concept', function (convo, next) {
+		convo.setVar('selectedConcept', convo.vars.results.concepts[convo.vars.selectedConcept]);
+		next();
 	});
 
 	controller.studio.beforeThread('knowledge_model_lookup', 'concepts', function (convo, next) {
@@ -116,7 +142,7 @@ module.exports = function (controller) {
 
 search = function (branchUri, value) {
 	var requestUrl;
-	if (value.startsWith('http:')) { // looks like a URI
+	if (value.startsWith('<http:')) { // looks like a URI
 		var encodedUri = encodeURI(value.substring(1, value.length - 1)); // strip the < > and encode
 		requestUrl = `http://models-staging.dev.cf.private.springer.com/km/concept?maxNarrowingDepth=0&uri=${encodedUri}`;
 		return kmLookup(requestUrl).then(function (concept) {
