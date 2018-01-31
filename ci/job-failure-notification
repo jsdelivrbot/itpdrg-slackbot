@@ -9,4 +9,4 @@
 
 
 errormsg="The following build broke: Pipeline $1 failed ($4). @here"
-curl -G -s -X POST "http://slack-off.dev.cf.springer-sbm.com/send_message" --data-urlencode "text=$errormsg" --data-urlencode "channel=secret-tools"
+curl -G -s -X POST "http://slack-off.dev.cf.springer-sbm.com/send_message" --data-urlencode "text=$errormsg" --data-urlencode "channel=#itpdrg-gocd"
