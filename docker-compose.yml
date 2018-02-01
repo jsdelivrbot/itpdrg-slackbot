@@ -1,5 +1,5 @@
 # This Fig configuration file is meant to be used with fig-env. See
-# https://bitbucket.org/springersbm/fig-env.
+# https://bitbucket.org/springersbm/fig-env:v7.
 
 code:
   image: te-docker.docker-registry.tools.springer-sbm.com/fig-env-node
