@@ -32,10 +32,20 @@ module.exports = function (controller) {
 		topLevelConcepts().then(function(top_level_concepts) {
 			convo.setVar('top_level_concepts', top_level_concepts);
 			convo.setVar('top_level_cursor', null);
-			convo.setVar('top_level_uri', null);
 			next();
 		});
 
+	});
+
+	controller.studio.beforeThread('knowledge_model_lookup', 'branch', function (convo, next) {
+		if (convo.vars.top_level_concept) { // branch was selected before, ask user whether they want to continue with that
+			convo.gotoThread('ask_continue_branch');
+		} else {
+			convo.setVar('top_level_cursor', null);
+			convo.setVar('current_top_level', null);
+			convo.gotoThread('top_level_concepts');
+		}
+		next('stop');
 	});
 
 	controller.studio.beforeThread('knowledge_model_lookup', 'top_level_concepts', function (convo, next) {
@@ -49,25 +59,11 @@ module.exports = function (controller) {
 			convo.setVar('current_top_level', convo.vars.top_level_concepts.concepts[convo.vars.top_level_cursor]);
 			next();
 		} else {
-			convo.gotoThread('choice');
+			convo.setVar('top_level_concept', null);
+			convo.gotoThread('select_branch');
 			next('stop');
 		}
 
-	});
-
-	controller.studio.beforeThread('knowledge_model_lookup', 'xxx', function (convo, next) {
-
-		var selected_top_level = convo.extractResponse('selected_top_level');
-		var selected_branch = selected_top_level - 1;
-		if (selected_branch >= 0
-			&& selected_branch < convo.vars.top_level_concepts.numberOfConcepts
-		) {
-			convo.setVar('selected_branch', selected_branch);
-			next();
-		} else {
-			convo.gotoThread('top_level_concepts');
-			next('stop');
-		}
 	});
 
 	controller.studio.beforeThread('knowledge_model_lookup', 'results', function (convo, next) {
@@ -79,17 +75,25 @@ module.exports = function (controller) {
 		var value = convo.vars.searchTerm;
 		console.log(`searching for ${value}`);
 
-		var branchUri = null;
-		
-		if (convo.vars.top_level_concepts && convo.vars.selected_branch) {
-			branchUri = convo.vars.top_level_concepts.concepts[convo.vars.selected_branch].uri;
+		if (!convo.vars.top_level_concept) {
+			if (convo.vars.top_level_concepts) {
+				var selected_top_level_index = convo.extractResponse('selected_top_level_index');
+				if (selected_top_level_index >= 1
+					&& selected_top_level_index <= convo.vars.top_level_concepts.numberOfConcepts
+				) {
+					convo.setVar('top_level_concept', convo.vars.top_level_concepts.concepts[selected_top_level_index - 1]);
+				}
+				convo.setVar('top_level_cursor', null);
+				convo.setVar('current_top_level', null);
+			}
 		}
 
-		search(branchUri,value).then(function (results) {
+		search(convo.vars.top_level_concept.uri,value).then(function (results) {
 			convo.setVar('results', results);
 			if (results.numberOfConcepts > 1) {
 				convo.setVar('selectedConcept', null);
 				convo.setVar('conceptCursor', null);
+				convo.setVar('checkPoint', null);
 				convo.setVar('remainingConcepts', results.numberOfConcepts);
 				convo.gotoThread('concepts');
 			} else {
@@ -176,10 +180,7 @@ postProcessConcepts = function(concepts) {
 topLevelConcepts = function() {
 	requestUrl = `http://models-staging.dev.cf.private.springer.com/km/?maxNarrowingDepth=0`;
 		return kmLookup(requestUrl).then(function (concepts) {
-			return {
-				numberOfConcepts: concepts.length,
-				concepts: concepts
-			};
+			return postProcessConcepts(concepts);
 		});
 
 }
