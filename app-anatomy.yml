@@ -1,5 +1,5 @@
-version: 1.0
-component-id: slackbot
+version: "1.0"
+component-id: "slackbot"
 cf-org: drg-data
 cf-username: DRG-Data@springer.com
 ci-server-host: drg.gocd.tools.engineering
