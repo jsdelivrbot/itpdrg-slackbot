@@ -2,7 +2,9 @@
   "name": "botkit-starter-slack",
   "version": "0.0.2",
   "description": "A starter kit for building a custom Slack bot with Botkit Studio",
-  { "engines" : { "node" : ">=6.10" } },
+  "engines": {
+    "node": ">=6.10"
+  },
   "main": "bot.js",
   "scripts": {
     "start": "node bot.js"
