@@ -87,7 +87,7 @@ var controller = Botkit.slackbot(bot_options);
 
 controller.startTicking();
 
-var BotEngine = require(__dirname + '/itpdrg-botengine.js');
+//var BotEngine = require(__dirname + '/itpdrg-botengine.js');
 
 // Set up an Express-powered webserver to expose oauth and webhook endpoints
 var webserver = require(__dirname + '/components/express_webserver.js')(controller);
@@ -155,13 +155,13 @@ if (!process.env.clientId || !process.env.clientSecret) {
     require("./skills/" + file)(controller);
   });
 
-  // own framework
-  controller.on('direct_message,direct_mention,mention', function(bot, message) {
-    BotEngine.runTrigger(bot, message.text, message.user, message.channel, message).catch(function(err) {
-      bot.reply(message, 'I experienced an error processing your message: ' + err);
-      debug('my framework: ', err);
-    });
-  });
+  // // own framework
+  // controller.on('direct_message,direct_mention,mention', function(bot, message) {
+  //   BotEngine.runTrigger(bot, message.text, message.user, message.channel, message).catch(function(err) {
+  //     bot.reply(message, 'I experienced an error processing your message: ' + err);
+  //     debug('my framework: ', err);
+  //   });
+  // });
 
   // This captures and evaluates any message sent to the bot as a DM
   // or sent to the bot in the form "@bot message" and passes it to
