@@ -75,6 +75,7 @@ module.exports = function (controller) {
 		var value = convo.vars.searchTerm;
 		console.log(`searching for ${value}`);
 
+		var branchUri = null;
 		if (!convo.vars.top_level_concept) {
 			if (convo.vars.top_level_concepts) {
 				var selected_top_level_index = convo.extractResponse('selected_top_level_index');
@@ -82,13 +83,14 @@ module.exports = function (controller) {
 					&& selected_top_level_index <= convo.vars.top_level_concepts.numberOfConcepts
 				) {
 					convo.setVar('top_level_concept', convo.vars.top_level_concepts.concepts[selected_top_level_index - 1]);
+					branchUri = convo.vars.top_level_concept.uri;
 				}
 				convo.setVar('top_level_cursor', null);
 				convo.setVar('current_top_level', null);
 			}
 		}
 
-		search(convo.vars.top_level_concept.uri,value).then(function (results) {
+		search(branchUri,value).then(function (results) {
 			convo.setVar('results', results);
 			if (results.numberOfConcepts > 1) {
 				convo.setVar('selectedConcept', null);
