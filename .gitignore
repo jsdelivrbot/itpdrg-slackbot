@@ -6,3 +6,5 @@ package-lock.json
 .data/
 .idea/
 *.iml
+.vscode
+*.code-workspace

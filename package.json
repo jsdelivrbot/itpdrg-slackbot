@@ -8,26 +8,27 @@
   "main": "bot.js",
   "scripts": {
     "start": "node bot.js",
-    "test": "mocha"
+    "test": "mocha --debug-brk"
   },
   "dependencies": {
     "body-parser": "^1.15.2",
     "botkit": "^0.6.7",
+    "botkit-mock": "^0.1.5",
     "botkit-storage-mongo": "^1.0.6",
     "botkit-studio-metrics": "^0.0.2",
     "cookie-parser": "^1.4.3",
     "debug": "^2.3.3",
     "express": "^4.14.0",
     "express-hbs": "^1.0.4",
+    "nock": "^9.0.2",
     "node-env-file": "^0.1.8",
+    "pos": "^0.4.1",
+    "qs": "^6.3.0",
     "querystring": "^0.2.0",
     "request": "^2.79.0",
-    "pos": "^0.4.1",
-    "wordfilter": "^0.2.6",
     "slack-mock": "^1.1.0",
-    "nock": "^9.0.2",
-    "qs": "^6.3.0",
     "winston": "^2.3.0",
+    "wordfilter": "^0.2.6",
     "ws": "^1.1.1"
   },
   "devDependencies": {
