@@ -1,5 +1,7 @@
 module.exports = function (controller) {
 
+    controller.setTickDelay(100);
+    
     //var BotEngine = require(__dirname + '/itpdrg-botengine.js');
 
     // Set up an Express-powered webserver to expose oauth and webhook endpoints
@@ -63,9 +65,6 @@ module.exports = function (controller) {
 
         // Load in some helpers that make running Botkit on Glitch.com better
         require(__dirname + '/components/plugin_glitch.js')(controller);
-
-        // enable advanced botkit studio metrics
-        require('botkit-studio-metrics')(controller);
 
         var normalizedPath = require("path").join(__dirname, "skills");
         require("fs").readdirSync(normalizedPath).forEach(function (file) {

@@ -37,6 +37,10 @@ module.exports = function (controller) {
 
 	});
 
+	controller.studio.beforeThread('knowledge_model_lookup', 'default', function (convo, next) {
+		console.log('beforeThread(default)');
+	});
+
 	controller.studio.beforeThread('knowledge_model_lookup', 'branch', function (convo, next) {
 		if (convo.vars.top_level_concept) { // branch was selected before, ask user whether they want to continue with that
 			convo.gotoThread('ask_continue_branch');
